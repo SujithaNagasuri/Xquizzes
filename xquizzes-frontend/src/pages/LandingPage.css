@@ -1,0 +1,235 @@
+/* GENERAL */
+body {
+  margin: 0;
+  font-family: "Inter", sans-serif;
+  background: #f8fbff;
+}
+
+.landing-container {
+  width: 100%;
+  padding: 0;
+}
+
+/* NAVBAR */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 22px 60px;
+  background: #ffffff;
+  border-bottom: 1px solid #eaeaea;
+}
+
+.logo {
+  font-size: 28px;
+  font-weight: 700;
+  color: #0d1b2a;
+}
+
+.nav-actions button {
+  margin-left: 15px;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 15px;
+  cursor: pointer;
+  border: none;
+}
+
+.login-btn {
+  background: transparent;
+  color: #0d1b2a;
+}
+
+.signup-btn {
+  background: #0d1b2a;
+  color: #fff;
+}
+
+/* HERO */
+.hero {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 80px 60px;
+}
+
+.hero-left {
+  max-width: 520px;
+}
+
+.hero-title {
+  font-size: 42px;
+  font-weight: 800;
+  color: #0d1b2a;
+  line-height: 1.2;
+}
+
+.hero-subtitle {
+  font-size: 18px;
+  color: #334155;
+  margin: 20px 0 40px;
+}
+
+.get-started-btn {
+  padding: 14px 30px;
+  background: #0d1b2a;
+  color: white;
+  font-size: 17px;
+  border-radius: 10px;
+  cursor: pointer;
+  border: none;
+}
+
+.hero-right .hero-img {
+  width: 480px;
+}
+
+/* FEATURES */
+.features {
+  display: flex;
+  justify-content: center;
+  gap: 25px;
+  padding: 40px 60px;
+}
+
+.feature-card {
+  background: #fff;
+  width: 300px;
+  padding: 30px;
+  border-radius: 14px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
+}
+
+.feature-icon {
+  font-size: 30px;
+  margin-bottom: 10px;
+}
+
+.feature-card h3 {
+  margin: 0;
+  font-size: 20px;
+  color: #0d1b2a;
+}
+
+.feature-card p {
+  font-size: 15px;
+  color: #475569;
+  margin-top: 10px;
+}
+
+
+/* WHY SECTION */
+.why-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 70px 60px;
+}
+
+.why-left {
+  max-width: 540px;
+}
+
+.why-left h2 {
+  font-size: 34px;
+  font-weight: 800;
+  color: #0d1b2a;
+}
+
+.why-left h3 {
+  font-size: 22px;
+  margin-top: 12px;
+  color: #1e293b;
+}
+
+.why-left p {
+  font-size: 16px;
+  margin-top: 15px;
+  color: #475569;
+  line-height: 1.6;
+}
+
+.why-img {
+  width: 420px;
+}
+
+
+/* HOW IT WORKS */
+.how-section {
+  padding: 60px 60px;
+  text-align: center;
+}
+
+.how-section h2 {
+  font-size: 32px;
+  font-weight: 800;
+  margin-bottom: 40px;
+  color: #0d1b2a;
+}
+
+.how-grid {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+}
+
+.how-card {
+  background: #ffffff;
+  width: 280px;
+  padding: 30px;
+  border-radius: 14px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  text-align: center;
+}
+
+.how-icon {
+  font-size: 32px;
+  margin-bottom: 10px;
+}
+
+.how-card h3 {
+  font-size: 20px;
+  color: #0d1b2a;
+}
+
+.how-card p {
+  font-size: 15px;
+  margin-top: 8px;
+  color: #475569;
+}
+
+
+/* ANALYTICS SECTION */
+.analytics-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 80px 60px;
+}
+
+.analytics-left {
+  max-width: 500px;
+}
+
+.analytics-left h2 {
+  font-size: 32px;
+  font-weight: 800;
+  color: #0d1b2a;
+}
+
+.analytics-sub {
+  font-size: 18px;
+  margin-top: 12px;
+  color: #1e293b;
+}
+
+.analytics-desc {
+  margin-top: 20px;
+  font-size: 16px;
+  color: #475569;
+  line-height: 1.6;
+}
+
+.analytics-img {
+  width: 420px;
+}

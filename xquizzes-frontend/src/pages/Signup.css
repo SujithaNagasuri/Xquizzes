@@ -1,0 +1,5 @@
+@import "./Login.css";
+
+.auth-card h2 {
+  margin-bottom: 10px;
+}

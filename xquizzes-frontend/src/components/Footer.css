@@ -1,0 +1,65 @@
+.footer {
+  background-color: #141414;
+  color: white;
+  padding: 40px 0 20px;
+  margin-top: 40px;
+}
+
+.footer-container {
+  width: 90%;
+  margin: auto;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.footer-section {
+  flex: 1;
+  min-width: 250px;
+  margin-bottom: 20px;
+}
+
+.footer-section h3 {
+  color: #7adaa5; /* your theme color */
+  margin-bottom: 10px;
+  font-size: 1.6rem;
+}
+
+.footer-section h4 {
+  color: #7adaa5;
+  margin-bottom: 12px;
+  font-size: 1.2rem;
+}
+
+.footer-section p {
+  color: #e1e1e1;
+  line-height: 1.5;
+  margin-top: 6px;
+}
+
+.footer-section ul {
+  list-style: none;
+  padding: 0;
+}
+
+.footer-section ul li {
+  margin-bottom: 8px;
+}
+
+.footer-section ul li a {
+  text-decoration: none;
+  color: #ffffff;
+  transition: 0.2s ease;
+}
+
+.footer-section ul li a:hover {
+  color: #7adaa5;
+}
+
+.footer-bottom {
+  text-align: center;
+  padding-top: 15px;
+  border-top: 1px solid #333;
+  color: #bbbbbb;
+  font-size: 0.9rem;
+}
