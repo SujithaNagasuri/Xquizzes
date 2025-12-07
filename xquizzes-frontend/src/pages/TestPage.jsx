@@ -11,91 +11,60 @@ export default function TestPage() {
   const questions = questionsData[subject] || [];
   const total = questions.length;
 
-  // seconds for test (example: 10 minutes = 600s). You can adjust per subject.
-  const DEFAULT_TIME = 10 * 60; // 10 minutes
-  const [timeLeft, setTimeLeft] = useState(DEFAULT_TIME);
-  const timerRef = useRef(null);
+  const DEFAULT_TIME = total * 60;
 
-  const [selected, setSelected] = useState(() => Array(total).fill(null));
+  const [timeLeft, setTimeLeft] = useState(DEFAULT_TIME);
+  const [currentQ, setCurrentQ] = useState(0);
+  const [selected, setSelected] = useState(Array(total).fill(null));
+  const [flagged, setFlagged] = useState(Array(total).fill(false));
+
   const [submitted, setSubmitted] = useState(false);
   const [score, setScore] = useState(0);
-  const [correctCount, setCorrectCount] = useState(0);
 
+  const timerRef = useRef(null);
+
+  // Start timer
   useEffect(() => {
-    // reset when subject or questions change
     setSelected(Array(total).fill(null));
-    setSubmitted(false);
-    setScore(0);
-    setCorrectCount(0);
+    setFlagged(Array(total).fill(false));
     setTimeLeft(DEFAULT_TIME);
 
-    // start timer
-    if (timerRef.current) clearInterval(timerRef.current);
     timerRef.current = setInterval(() => {
-      setTimeLeft((s) => s - 1);
+      setTimeLeft((t) => t - 1);
     }, 1000);
 
-    return () => {
-      if (timerRef.current) clearInterval(timerRef.current);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-}, [subject, total]);
+    return () => clearInterval(timerRef.current);
+  }, [subject, total]);
 
-  // auto-submit when timeLeft reaches 0
   useEffect(() => {
-    if (timeLeft <= 0 && !submitted) {
-      handleSubmit(true);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    if (timeLeft <= 0 && !submitted) handleSubmit();
   }, [timeLeft]);
 
-  const handleSelect = (qIndex, optionIndex) => {
+  // Select an option
+  const handleSelect = (oi) => {
     if (submitted) return;
-    setSelected((prev) => {
-      const copy = [...prev];
-      copy[qIndex] = optionIndex;
-      return copy;
-    });
+    const copy = [...selected];
+    copy[currentQ] = oi;
+    setSelected(copy);
   };
 
-  const calculateScore = () => {
+  const toggleFlag = () => {
+    const copy = [...flagged];
+    copy[currentQ] = !copy[currentQ];
+    setFlagged(copy);
+  };
+
+  // Submit test
+  const handleSubmit = () => {
+    clearInterval(timerRef.current);
+
     let sc = 0;
-    let correct = 0;
-    questions.forEach((q, idx) => {
-      if (selected[idx] === q.answer) {
-        sc += 1;
-        correct += 1;
-      }
+    questions.forEach((q, i) => {
+      if (selected[i] === q.answer) sc++;
     });
+
     setScore(sc);
-    setCorrectCount(correct);
-  };
-
-  const handleSubmit = (isAuto = false) => {
-    if (submitted) return;
-    if (timerRef.current) clearInterval(timerRef.current);
-    calculateScore();
     setSubmitted(true);
-    if (isAuto) {
-      // optional: show a subtle message
-      // alert("Time's up. Your test has been submitted.");
-    }
-  };
-
-  const handleRetry = () => {
-    setSelected(Array(total).fill(null));
-    setSubmitted(false);
-    setScore(0);
-    setCorrectCount(0);
-    setTimeLeft(DEFAULT_TIME);
-    if (timerRef.current) clearInterval(timerRef.current);
-    timerRef.current = setInterval(() => {
-      setTimeLeft((s) => s - 1);
-    }, 1000);
-  };
-
-  const handleBack = () => {
-    navigate("/dashboard");
   };
 
   const formatTime = (secs) => {
@@ -105,75 +74,117 @@ export default function TestPage() {
   };
 
   return (
-    <div className="testpage-root">
-      <div className="testpage-header">
-        <div className="subject-title">
-          <h2>{subject.toUpperCase()} Test</h2>
-          <div className="meta">
-            <span>Total: {total}</span>
-            <span>Time Left: <strong>{formatTime(Math.max(0, timeLeft))}</strong></span>
-          </div>
-        </div>
+    <div className="test-wrapper">
 
-        <div className="test-actions">
-          {!submitted ? (
-            <>
-              <button className="btn btn-submit" onClick={() => handleSubmit(false)}>Submit</button>
-              <button className="btn btn-back" onClick={handleBack}>Back</button>
-            </>
-          ) : (
-            <>
-              <div className="result-summary">Score: {score} / {total}</div>
-              <button className="btn btn-retry" onClick={handleRetry}>Retry</button>
-              <button className="btn btn-back" onClick={handleBack}>Back to Dashboard</button>
-            </>
-          )}
-        </div>
+      {/* TOP HEADER */}
+      <div className="top-header">
+        <h2>{subject.toUpperCase()} Test</h2>
+        <div className="timer-box">{formatTime(timeLeft)}</div>
       </div>
 
-      <div className="questions-wrap">
-        {questions.length === 0 && (
-          <div className="no-questions">No questions available for this subject.</div>
-        )}
+      {/* MAIN AREA */}
+      <div className="test-container">
 
-        {questions.map((q, qi) => (
-          <div key={qi} className={`question-card ${submitted ? "submitted" : ""}`}>
-            <div className="q-top">
-              <div className="q-index">Q{qi + 1}.</div>
-              <div className="q-text">{q.question}</div>
-            </div>
+        {/* LEFT SIDE */}
+        <div className="test-left">
 
-            <div className="options">
-              {q.options.map((opt, oi) => {
-                const checked = selected[qi] === oi;
-                return (
+          {!submitted ? (
+            <div className="question-card">
+              <h3 className="question-text">
+                Q{currentQ + 1}. {questions[currentQ].question}
+              </h3>
+
+              <div className="options-list">
+                {questions[currentQ].options.map((opt, oi) => (
                   <label
                     key={oi}
-                    className={`option ${checked ? "checked" : ""} ${submitted ? (q.answer === oi ? "correct" : (checked ? "wrong" : "")) : ""}`}
+                    className={`option-item ${
+                      selected[currentQ] === oi ? "selected-option" : ""
+                    }`}
                   >
                     <input
                       type="radio"
-                      name={`q-${qi}`}
-                      value={oi}
-                      checked={checked || false}
-                      onChange={() => handleSelect(qi, oi)}
-                      disabled={submitted}
+                      name="option"
+                      checked={selected[currentQ] === oi}
+                      onChange={() => handleSelect(oi)}
                     />
-                    <span className="option-text">{opt}</span>
+                    {opt}
                   </label>
-                );
-              })}
-            </div>
-
-            {submitted && (
-              <div className="answer-row">
-                <span>Correct answer: <strong>{q.options[q.answer]}</strong></span>
-                {selected[qi] == null ? <span className="missed"> — Not answered</span> : null}
+                ))}
               </div>
-            )}
+
+              <button className="flag-btn" onClick={toggleFlag}>
+                {flagged[currentQ] ? "Unflag this question" : "Flag this question"}
+              </button>
+            </div>
+          ) : (
+            <div className="result-box">
+              <h2 className="result-title">🎉 Test Report</h2>
+
+              <div className="result-card">
+                <h3>Score Summary</h3>
+                <p><strong>Total Questions:</strong> {total}</p>
+                <p><strong>Correct Answers:</strong> {score}</p>
+                <p><strong>Wrong Answers:</strong> {total - score}</p>
+                <p><strong>Percentage:</strong> {(score / total * 100).toFixed(2)}%</p>
+              </div>
+
+              <button
+                className="dashboard-btn"
+                onClick={() => navigate("/dashboard")}
+              >
+                Back to Dashboard
+              </button>
+            </div>
+          )}
+        </div>
+
+        {/* RIGHT SIDE: QUESTION NAVIGATION */}
+        <div className="question-nav">
+          <h3>Questions</h3>
+
+          <div className="q-grid">
+            {questions.map((_, idx) => (
+              <button
+                key={idx}
+                className={`
+                  q-number 
+                  ${idx === currentQ ? "current" : ""}
+                  ${selected[idx] !== null ? "answered" : ""}
+                  ${flagged[idx] ? "flagged" : ""}
+                `}
+                onClick={() => setCurrentQ(idx)}
+              >
+                {idx + 1}
+              </button>
+            ))}
           </div>
-        ))}
+        </div>
       </div>
+
+      {/* STICKY BOTTOM NAVIGATION */}
+      {!submitted && (
+        <div className="bottom-nav">
+          <button
+            disabled={currentQ === 0}
+            onClick={() => setCurrentQ((prev) => prev - 1)}
+          >
+            Previous
+          </button>
+
+          <button
+            onClick={() =>
+              currentQ < total - 1
+                ? setCurrentQ((prev) => prev + 1)
+                : handleSubmit()
+            }
+            className={currentQ === total - 1 ? "submit-btn" : ""}
+          >
+            {currentQ === total - 1 ? "Submit Test" : "Next"}
+          </button>
+        </div>
+      )}
+
     </div>
   );
 }
